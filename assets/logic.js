@@ -1,13 +1,13 @@
-  // Initialize Firebase
-  var config = {
-    apiKey: "AIzaSyAIbGBc_ePD8B4zuZJKJLqLdqMth1KSHdY",
-    authDomain: "train-scheduler-8f8c6.firebaseapp.com",
-    databaseURL: "https://train-scheduler-8f8c6.firebaseio.com",
-    projectId: "train-scheduler-8f8c6",
-    storageBucket: "train-scheduler-8f8c6.appspot.com",
-    messagingSenderId: "322767568053"
-  };
-  firebase.initializeApp(config);
+// Initialize Firebase
+var config = {
+  apiKey: "AIzaSyAIbGBc_ePD8B4zuZJKJLqLdqMth1KSHdY",
+  authDomain: "train-scheduler-8f8c6.firebaseapp.com",
+  databaseURL: "https://train-scheduler-8f8c6.firebaseio.com",
+  projectId: "train-scheduler-8f8c6",
+  storageBucket: "train-scheduler-8f8c6.appspot.com",
+  messagingSenderId: "322767568053"
+};
+firebase.initializeApp(config);
 
 // Create a variable to reference the database.
 var database = firebase.database();
@@ -28,7 +28,7 @@ var nextArrivalInMin = 0;
 var nextArrival = "";
 
 // Capture Submit Button Click.
-$("#submit-train").on("click", function() {
+$("#submit-train").on("click", function () {
   // Don't refresh page!
   event.preventDefault();
 
@@ -61,7 +61,7 @@ $("#submit-train").on("click", function() {
 
     // Simply set the next arrival time using first train time
     // And using the remainder of the frequency divided by a day.
-    nextArrivalInMin = firstTrainTotalMin + (frequency%1440);
+    nextArrivalInMin = firstTrainTotalMin + (frequency % 1440);
 
     // Determine the next train based on current time and next arrival.
     determineNextTrain(currentTimeTotalMin, nextArrivalInMin);
@@ -92,16 +92,16 @@ $("#submit-train").on("click", function() {
 
 // Firebase watcher
 // Retrieve list of trains using child_added
-database.ref().on("child_added", function(snapshot) {
-  
+database.ref().on("child_added", function (snapshot) {
+
   // Build up train table in DOM.
   $("#trains").append("<tr>" +
-                        "<th>" + snapshot.val().name + "</th>" +
-                        "<th>" + snapshot.val().destination + "</th>" +
-                        "<th>" + snapshot.val().frequency + "</th>" +
-                        "<th>" + snapshot.val().nextArrival + "</th>" +
-                        "<th>" + snapshot.val().minutesAway + "</th>" +
-                      "</tr>");
+    "<th>" + snapshot.val().name + "</th>" +
+    "<th>" + snapshot.val().destination + "</th>" +
+    "<th>" + snapshot.val().frequency + "</th>" +
+    "<th>" + snapshot.val().nextArrival + "</th>" +
+    "<th>" + snapshot.val().minutesAway + "</th>" +
+    "</tr>");
 });
 
 // Convert first train tim minutes using moment.js.
@@ -112,7 +112,7 @@ function convertFirstTrainToMinutes(firstTrain) {
   firstTrainMin = firstTrain.minutes();
 
   // Calculation to add up the minutes.
-  firstTrainTotalMin = firstTrainMin + firstTrainHours*60;
+  firstTrainTotalMin = firstTrainMin + firstTrainHours * 60;
 }
 
 // Convert current time to minutes using moment.js.
@@ -122,17 +122,17 @@ function convertCurrentTimeToMinutes() {
   var currentMinutes = moment().minutes();
 
   // Calculation to add up the minutes.
-  currentTimeTotalMin = currentMinutes + currentHours*60;
+  currentTimeTotalMin = currentMinutes + currentHours * 60;
 }
 
 // Creates an array of train times over 24 hour period.
 function createTrainSchedule(firstTrainTotalMin, frequency) {
-  
+
   // Need to reset these values to create new schedule array.
   trainTime = 0;
   schedule = [];
   for (var i = 0; trainTime < 1440; i++) {
-    trainTime = firstTrainTotalMin + (frequency*i);
+    trainTime = firstTrainTotalMin + (frequency * i);
     if (trainTime > 1440) {
       return schedule;
     } else {
